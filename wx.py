@@ -33,7 +33,7 @@ json_rain_midnight_idx  = '0'                                                   
 json_humi_idx           = '5'                               # Humidity sensor IDX               #
 json_baro_idx           = '5'                               # Baromether  IDX                   #
 # additional                                                                                    #
-json_tempi_idx          = '0'                               # inside temperature                #
+json_tempi_idx          = '27'                              # inside temperature                #
 json_pm_25_idx          = '0'                               # PM 2.5 sensor IDX                 #
 json_pm_10_idx          = '0'                               # PM 10 sensor IDX                  #
 json_voltage_batt_idx   = '7'                               # Battery voltage sensor            #
@@ -147,6 +147,22 @@ def baro():
             return('b' + zero + str(baro))
         except:
             return(0)
+
+# outside temperature is a minimum information to generate WX APRS DATA
+def inside_temp():
+    global data_elements_count,data_elements_first
+    if(json_tempi_idx == 0):
+        return('')
+    else:
+        try:
+            response = urllib.urlopen(url+json_tempi_idx)
+            data = json.loads(response.read())
+            data_elements_count = data_elements_count + 1
+            data_elements_first = True
+            temp_celsius = float(round(data["result"][0]["Temp"],1))
+            return('Int.T: ' + str(temp_celsius) + 'C ')
+        except:
+            return('')
             
 def voltage():
     global data_elements_count
@@ -157,7 +173,7 @@ def voltage():
             response = urllib.urlopen(url+json_voltage_batt_idx)
             data = json.loads(response.read())
             voltage = float(round(data["result"][0]["Voltage"],1))
-            return('Bat:' + str(voltage) + 'V')
+            return('Bat: ' + str(voltage) + 'V ')
         except:
             return(0)
             
@@ -169,7 +185,7 @@ def wx_data():
         return('!' + wx_lat + '/' + wx_lon + '_ ' + wx_err_comment)
     # we have some data
     else:
-        return('!' + str(wx_lat) + '/' + str(wx_lon) + '_' + str(wind_direction()) + '/' + str(wind_speed()) + str(wind_gust()) + str(outside_temp()) + str(rain_1h()) + str(rain_24h()) + str(rain_midnight()) + str(humi()) + str(baro()) + ' ' + str(voltage()) + ' ' + str(wx_comment))
+        return('!' + str(wx_lat) + '/' + str(wx_lon) + '_' + str(wind_direction()) + '/' + str(wind_speed()) + str(wind_gust()) + str(outside_temp()) + str(rain_1h()) + str(rain_24h()) + str(rain_midnight()) + str(humi()) + str(baro()) + ' ' + str(voltage()) + str(inside_temp()) + str(wx_comment))
 
 ########################################### MAIN ################################################
 
