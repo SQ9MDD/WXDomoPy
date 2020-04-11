@@ -36,7 +36,7 @@ json_baro_idx           = '5'                               # Baromether  IDX   
 json_tempi_idx          = '0'                               # inside temperature                #
 json_pm_25_idx          = '0'                               # PM 2.5 sensor IDX                 #
 json_pm_10_idx          = '0'                               # PM 10 sensor IDX                  #
-json_voltage_batt_idx   = '44'                              # Battery voltage sensor            #
+json_voltage_batt_idx   = '7'                               # Battery voltage sensor            #
 wx_comment  	        = 'Domoticz & APRX WX PYTHON'      	# beacon comment		            #
 wx_err_comment 	        = 'No WX data'				        # comment when no data avaiable	    #
 #										      	                                                #
@@ -147,7 +147,20 @@ def baro():
             return('b' + zero + str(baro))
         except:
             return(0)
-
+            
+def voltage():
+    global data_elements_count
+    if(json_voltage_batt_idx == 0):
+        return(0)
+    else:
+        try:
+            response = urllib.urlopen(url+json_voltage_batt_idx)
+            data = json.loads(response.read())
+            voltage = float(round(data["result"][0]["Voltage"],1))
+            return('Bat:' + str(voltage) + 'V')
+        except:
+            return(0)
+            
 # make WX data
 def wx_data():
     outside_temp_label = outside_temp()
@@ -156,7 +169,7 @@ def wx_data():
         return('!' + wx_lat + '/' + wx_lon + '_ ' + wx_err_comment)
     # we have some data
     else:
-        return('!' + str(wx_lat) + '/' + str(wx_lon) + '_' + str(wind_direction()) + '/' + str(wind_speed()) + str(wind_gust()) + str(outside_temp()) + str(rain_1h()) + str(rain_24h()) + str(rain_midnight()) + str(humi()) + str(baro()) + ' ' + str(wx_comment))
+        return('!' + str(wx_lat) + '/' + str(wx_lon) + '_' + str(wind_direction()) + '/' + str(wind_speed()) + str(wind_gust()) + str(outside_temp()) + str(rain_1h()) + str(rain_24h()) + str(rain_midnight()) + str(humi()) + str(baro()) + ' ' + str(voltage()) + ' ' + str(wx_comment))
 
 ########################################### MAIN ################################################
 
