@@ -25,13 +25,13 @@ json_ip                 = '10.9.48.3'                       # domoticz IP adress
 json_wind_direction_idx = '0'                               # wind direction sensor IDX         #
 json_wind_speed_idx     = '0'                               # wind speed sensor IDX             #
 json_wind_gust_idx      = '0'                               # wind speed gust IDX               #
-json_temp_idx           = '4'                               # Temp sensor IDX                   #
+json_temp_idx           = '5'                               # Temp sensor IDX                   #
 # optionally                                                                                    #
 json_rain_1h_idx        = '0'                                                                   #
 json_rain_24h_idx       = '0'                                                                   #
 json_rain_midnight_idx  = '0'                                                                   #
-json_humi_idx           = '0'                               # Humidity sensor IDX               #
-json_baro_idx           = '20'                              # Baromether  IDX                   #
+json_humi_idx           = '5'                               # Humidity sensor IDX               #
+json_baro_idx           = '5'                               # Baromether  IDX                   #
 # additional                                                                                    #
 json_tempi_idx          = '0'                               # inside temperature                #
 json_pm_25_idx          = '0'                               # PM 2.5 sensor IDX                 #
@@ -125,7 +125,7 @@ def humi():
             humi = int(data["result"][0]["Humidity"])
             if(humi == 100):
                 humi = '00'
-            return(humi)
+            return('h' + str(humi))
         except:
             return('')
 
@@ -153,7 +153,7 @@ def wx_data():
     outside_temp_label = outside_temp()
     # no data send status
     if(data_elements_count == 0 and not data_elements_first):
-        return('!' + wx_lat + '/' + wx_lon + '_' + wx_err_comment)
+        return('!' + wx_lat + '/' + wx_lon + '_ ' + wx_err_comment)
     # we have some data
     else:
         return('!' + str(wx_lat) + '/' + str(wx_lon) + '_' + str(wind_direction()) + '/' + str(wind_speed()) + str(wind_gust()) + str(outside_temp()) + str(rain_1h()) + str(rain_24h()) + str(rain_midnight()) + str(humi()) + str(baro()) + ' ' + str(wx_comment))
