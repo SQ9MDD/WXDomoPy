@@ -75,7 +75,7 @@ def wind_gust():
 def outside_temp():
     global data_elements_count,data_elements_first
     if(json_temp_idx == 0):
-        return(0)
+        return('')
     else:
         try:
             response = urllib.urlopen(url+json_temp_idx)
@@ -89,7 +89,7 @@ def outside_temp():
                 zero = ''
             return('t' + zero + str(temp_fahrenheit))
         except:
-            return(0)
+            return('')
 
 # rain 1h period currently not supported
 def rain_1h():
@@ -133,7 +133,7 @@ def humi():
 def baro():
     global data_elements_count
     if(json_baro_idx == 0):
-        return(0)
+        return('')
     else:
         try:
             response = urllib.urlopen(url+json_baro_idx)
@@ -146,7 +146,7 @@ def baro():
                 zero = ''
             return('b' + zero + str(baro))
         except:
-            return(0)
+            return('')
 
 # outside temperature is a minimum information to generate WX APRS DATA
 def inside_temp():
@@ -167,7 +167,7 @@ def inside_temp():
 def voltage():
     global data_elements_count
     if(json_voltage_batt_idx == 0):
-        return(0)
+        return('')
     else:
         try:
             response = urllib.urlopen(url+json_voltage_batt_idx)
@@ -175,7 +175,7 @@ def voltage():
             voltage = float(round(data["result"][0]["Voltage"],1))
             return('Bat: ' + str(voltage) + 'V ')
         except:
-            return(0)
+            return('')
             
 # make WX data
 def wx_data():
