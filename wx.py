@@ -6,11 +6,11 @@
 # http://sq9mdd.qrz.pl
 #
 # ramka pogodowa bez pozycji z czasem
-# _mm dd gg mm                temp hum  baro
+# _mm dd gg mm                temp hum                baro
 # _03 29 06 58 c025 s009 g008 t030 r000 p000 P000 h00 b10218
 #
 # ramka pogodowa z pozycja bez czasu
-#                        _                temp hum  baro
+#                        _                temp hum                baro
 # ! 5215.01N / 02055.58E _ ... / ... g... t030 r000 p000 P000 h00 b10218
 #
 # temp z sieci APRSjest w fahrenheit przeliczanie na C =(F-32)/9*5
@@ -148,7 +148,7 @@ def baro():
         except:
             return('')
 
-# outside temperature is a minimum information to generate WX APRS DATA
+# raspberry inside temperature
 def inside_temp():
     global data_elements_count,data_elements_first
     if(json_tempi_idx == 0):
@@ -163,7 +163,8 @@ def inside_temp():
             return('Int.T: ' + str(temp_celsius) + 'C ')
         except:
             return('')
-            
+
+# battery voltage
 def voltage():
     global data_elements_count
     if(json_voltage_batt_idx == 0):
@@ -176,7 +177,7 @@ def voltage():
             return('Bat: ' + str(voltage) + 'V ')
         except:
             return('')
-            
+
 # make WX data
 def wx_data():
     outside_temp_label = outside_temp()
