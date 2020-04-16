@@ -202,7 +202,6 @@ def wx_data():
     else:
         return('!' + str(wx_lat) + '/' + str(wx_lon) + '_' + str(wind_direction()) + '/' + str(wind_speed()) + str(wind_gust()) + str(outside_temp()) + str(rain_1h()) + str(rain_24h()) + str(rain_midnight()) + str(humi()) + str(baro()) + ' ' + str(voltage()) + str(inside_temp()) +  str(gen_dust()) + str(wx_comment))
 
-
 ########################################### MAIN ################################################
 
 # lets's go
