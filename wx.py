@@ -4,14 +4,27 @@
 # DOMOTICZ to APRX PYTHON script
 # SQ9MDD@2020 released under GPL.v.2
 # http://sq9mdd.qrz.pl
-#
-# ramka pogodowa bez pozycji z czasem
-# _mm dd gg mm                temp hum                baro
-# _03 29 06 58 c025 s009 g008 t030 r000 p000 P000 h00 b10218
-#
+
+# weather frame with position without time structure
 # ramka pogodowa z pozycja bez czasu
-#                        _                temp hum                baro
-# ! 5215.01N / 02055.58E _ ... / ... g... t030 r000 p000 P000 h00 b10218
+
+#   !               - required      identifier
+#   5215.01N        - required      latitude
+#   /               - required      symbol table
+#   02055.58E       - required      longtitude
+#   _               - required      icon (must be WX)
+#   ...             - required      wind direction (from 0-360) if no data set: "..."         
+#   /               - required      separator
+#   ...             - required      wind speed (average last 1 minute) if no data set: "..."          
+#   g...            - required      wind gust (max from last 5 mins) if no data set: "g..." 
+#   t030            - required      temperature in fahrenheit    
+#   r000            - option        rain xxx
+#   p000            - option        rain xxx
+#   P000            - option        rain xxx  
+#   h00             - option        relative humidity (00 means 100%Rh)     
+#   b10218          - option        atmosferic pressure in hPa multiple 10  
+#   V138            - option        Voltage * 10 (13.8 - 138)
+#   
 #
 # temp z sieci APRSjest w fahrenheit przeliczanie na C =(F-32)/9*5
 # temp w celsjusz do sieci APRS trzeba wyslac jako fahrenheit F = (C*9/5)+32
@@ -37,7 +50,8 @@ json_tempi_idx          = '0'                               # inside temperature
 json_pm_25_idx          = '0'                               # PM 2.5 sensor IDX                 #
 json_pm_10_idx          = '0'                               # PM 10 sensor IDX                  #
 json_general_pm_idx     = '58'                              # General PM sensor                 #
-json_voltage_batt_idx   = '7'                               # Battery voltage sensor            #
+json_voltage_batt_idx   = '0'                               # Battery voltage in comment        #
+json_voltage_batti_idx  = '7'                               # Battery voltage in frame          #
 wx_comment  	        = 'WXDomoPy'      	                # beacon comment		            #
 wx_err_comment 	        = 'No WX data'				        # comment when no data avaiable	    #
 #										      	                                                #
@@ -204,6 +218,19 @@ def voltage():
             return('Bat: ' + str(voltage) + 'V ')
         except:
             return('')
+            
+def voltage_in_frame():
+    global data_elements_count
+    if(json_voltage_batt_idx == 0):
+        return('')
+    else:
+        try:
+            response = urllib.urlopen(url+json_voltage_batti_idx)
+            data = json.loads(response.read())
+            voltage = int(round(data["result"][0]["Voltage"],1)*10)
+            return('V' + str(voltage))
+        except:
+            return('')            
 
 # read general pm sensor            
 def gen_dust():
@@ -226,7 +253,7 @@ def wx_data():
         return('!' + wx_lat + '/' + wx_lon + '_ ' + wx_err_comment)
     # we have some data
     else:
-        return('!' + str(wx_lat) + '/' + str(wx_lon) + '_' + str(wind_direction()) + '/' + str(wind_speed()) + str(wind_gust()) + str(outside_temp()) + str(rain_1h()) + str(rain_24h()) + str(rain_midnight()) + str(humi()) + str(baro()) + ' ' + str(voltage()) + str(inside_temp()) +  str(gen_dust()) + str(wx_comment))
+        return('!' + str(wx_lat) + '/' + str(wx_lon) + '_' + str(wind_direction()) + '/' + str(wind_speed()) + str(wind_gust()) + str(outside_temp()) + str(rain_1h()) + str(rain_24h()) + str(rain_midnight()) + str(humi()) + str(baro()) + str(voltage_in_frame()) + ' ' + str(voltage()) + str(inside_temp()) +  str(gen_dust()) + str(wx_comment))
 
 ########################################### MAIN ################################################
 
