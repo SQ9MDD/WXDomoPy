@@ -54,7 +54,8 @@ json_general_pm_idx     = '58'                              # General PM sensor 
 json_voltage_batt_idx   = '0'                               # Battery voltage in comment        #
 json_voltage_batti_idx  = '7'                               # Battery voltage in frame          #
 # extra addons                                                                                  #
-json_thunder_det_idx    = '67'                              # lightning detector                #
+json_thunder_dist_idx    = '67'                             # lightning detector distance       #
+json_thunder_enrg_idx    = '68'                             # lightning detector energy         #
 # comments                                                                                      #
 wx_comment  	        = 'WXDomoPy'      	                # beacon comment		            #
 wx_err_comment 	        = 'No WX data'				        # comment when no data avaiable	    #
@@ -249,14 +250,14 @@ def gen_dust():
             return('Dust: ' + str(dust) + ' ')
         except:
             return('')
-            
+# read lightning detector data            
 def storm_data():
-    if(json_thunder_det_idx == 0):
+    if(json_thunder_dist_idx == 0 or json_thunder_enrg_idx == 0):
         storm_warning = False
         return('')
     else:
         try:
-            response = urllib.urlopen(url+json_thunder_det_idx)
+            response = urllib.urlopen(url+json_thunder_dist_idx)
             data = json.loads(response.read())
             strike_distance = int(data["result"][0]["Data"])
             if(strike_distance == 0):
