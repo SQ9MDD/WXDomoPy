@@ -259,7 +259,7 @@ def storm_data():
         try:
             response = urllib.urlopen(url+json_thunder_dist_idx)
             data = json.loads(response.read())
-            strike_distance = int(data["result"][0]["Data"])
+            strike_distance = int(data["result"][0]["Data"].replace(" km",""))
             if(strike_distance == 0):
                 return('')
             elif(strike_distance > 0 and strike_distance < 10):
