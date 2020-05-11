@@ -23,8 +23,9 @@
 #   P000            - option        rain xxx  
 #   h00             - option        relative humidity (00 means 100%Rh)     
 #   b10218          - option        atmosferic pressure in hPa multiple 10  
-#   V138            - option        Voltage * 10 (13.8 - 138)
-#   
+#   Fxxxx           - option        water level above or below flood stage see: http://aprs.org/aprs12/weather-new.txt
+#   V138            - option        battery volts in tenths   128 would mean 12.8 volts
+#   Xxxx            - option        radiation lvl
 #
 # temp z sieci APRSjest w fahrenheit przeliczanie na C =(F-32)/9*5
 # temp w celsjusz do sieci APRS trzeba wyslac jako fahrenheit F = (C*9/5)+32
