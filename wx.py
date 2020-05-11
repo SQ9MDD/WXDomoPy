@@ -53,6 +53,9 @@ json_pm_10_idx          = '0'                               # PM 10 sensor IDX  
 json_general_pm_idx     = '58'                              # General PM sensor                 #
 json_voltage_batt_idx   = '0'                               # Battery voltage in comment        #
 json_voltage_batti_idx  = '7'                               # Battery voltage in frame          #
+# extra addons                                                                                  #
+json_thunder_det_idx    = '67'                              # lightning detector                #
+# comments                                                                                      #
 wx_comment  	        = 'WXDomoPy'      	                # beacon comment		            #
 wx_err_comment 	        = 'No WX data'				        # comment when no data avaiable	    #
 #										      	                                                #
@@ -63,6 +66,7 @@ import urllib, json
 url = 'http://' + json_ip + '/json.htm?type=devices&rid='
 data_elements_first = False
 data_elements_count = 0
+storm_warning = False
 
 ################################### FUNCTION ARE HERE ###########################################
 
@@ -245,6 +249,30 @@ def gen_dust():
             return('Dust: ' + str(dust) + ' ')
         except:
             return('')
+            
+def storm_data():
+    if(json_thunder_det_idx == 0):
+        storm_warning = False
+        return('')
+    else:
+        try:
+            response = urllib.urlopen(url+json_thunder_det_idx)
+            data = json.loads(response.read())
+            strike_distance = int(data["result"][0]["Data"])
+            if(strike_distance == 0):
+                return('')
+            elif(strike_distance > 0 and strike_distance < 10):
+                storm_warning = True
+                return('STORM OVERHEAD!!! ')                
+            elif(strike_distance > 10 and strike_distance < 20):
+                storm_warning = True
+                return('STORM COMING ')
+            elif(strike_distance > 20):
+                storm_warning = True
+                return('STORM DETECTED ')
+        except:
+            storm_warning = False
+            return('')
 
 # make WX data
 def wx_data():
@@ -254,7 +282,7 @@ def wx_data():
         return('!' + wx_lat + '/' + wx_lon + '_ ' + wx_err_comment)
     # we have some data
     else:
-        return('!' + str(wx_lat) + '/' + str(wx_lon) + '_' + str(wind_direction()) + '/' + str(wind_speed()) + str(wind_gust()) + str(outside_temp()) + str(rain_1h()) + str(rain_24h()) + str(rain_midnight()) + str(humi()) + str(baro()) + str(voltage_in_frame()) + ' ' + str(voltage()) + str(inside_temp()) +  str(gen_dust()) + str(wx_comment))
+        return('!' + str(wx_lat) + '/' + str(wx_lon) + '_' + str(wind_direction()) + '/' + str(wind_speed()) + str(wind_gust()) + str(outside_temp()) + str(rain_1h()) + str(rain_24h()) + str(rain_midnight()) + str(humi()) + str(baro()) + str(voltage_in_frame()) + 'oDtz' + ' ' + str(voltage()) + str(inside_temp()) +  str(gen_dust()) + storm_data() + str(wx_comment))
 
 ########################################### MAIN ################################################
 
