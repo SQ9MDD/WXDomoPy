@@ -45,6 +45,7 @@ wx_icon_table           = '/'                               # / - primary \ - se
 wx_icon_symbol          = '_'                                                                   #
 wx_comment  	        = 'WXDomoPy'      	                # beacon comment		            #
 wx_err_comment 	        = 'No WX data'				        # comment when no data avaiable	    #
+#                                                                                               #
 json_ip                 = '10.9.48.3'                       # domoticz IP adress                #
 # required                                                                                      #
 json_wind_direction_idx = '61'                              # wind direction sensor IDX         #
@@ -65,8 +66,8 @@ json_general_pm_idx     = '58'                              # General PM sensor 
 json_voltage_batt_idx   = '0'                               # Battery voltage in comment        #
 json_voltage_batti_idx  = '7'                               # Battery voltage in frame          #
 # extra addons                                                                                  #
-json_thunder_dist_idx    = '67'                             # lightning detector distance       #
-json_thunder_enrg_idx    = '68'                             # lightning detector energy         #
+json_thunder_dist_idx   = '67'                             # lightning detector distance       #
+json_thunder_enrg_idx   = '68'                             # lightning detector energy         #
 # comments                                                                                      #
 #										      	                                                #
 ######################## DO NOTE EDIT BELLOW THIS LINE ##########################################
@@ -76,7 +77,6 @@ import urllib, json
 url = 'http://' + json_ip + '/json.htm?type=devices&rid='
 data_elements_first = False
 data_elements_count = 0
-storm_warning = False
 
 ################################### FUNCTION ARE HERE ###########################################
 
@@ -274,7 +274,6 @@ def gen_dust():
 # read lightning detector data            
 def storm_data():
     if(int(json_thunder_dist_idx) == 0 or int(json_thunder_enrg_idx) == 0):
-        storm_warning = False
         return('')
     else:
         try:
@@ -284,16 +283,12 @@ def storm_data():
             if(strike_distance == 0):
                 return('')
             elif(strike_distance > 0 and strike_distance < 10):
-                storm_warning = True
                 return('STORM OVERHEAD!!! ')                
             elif(strike_distance > 10 and strike_distance < 20):
-                storm_warning = True
                 return('STORM COMING ')
             elif(strike_distance > 20):
-                storm_warning = True
                 return('STORM DETECTED ')
         except:
-            storm_warning = False
             return('')
 
 # make WX data
