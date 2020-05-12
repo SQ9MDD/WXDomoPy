@@ -54,8 +54,8 @@ json_general_pm_idx     = '58'                              # General PM sensor 
 json_voltage_batt_idx   = '0'                               # Battery voltage in comment        #
 json_voltage_batti_idx  = '7'                               # Battery voltage in frame          #
 # extra addons                                                                                  #
-json_thunder_dist_idx    = '67'                             # lightning detector distance       #
-json_thunder_enrg_idx    = '68'                             # lightning detector energy         #
+json_thunder_dist_idx    = '0' #67                             # lightning detector distance       #
+json_thunder_enrg_idx    = '0' #68                            # lightning detector energy         #
 # comments                                                                                      #
 wx_comment  	        = 'WXDomoPy'      	                # beacon comment		            #
 wx_err_comment 	        = 'No WX data'				        # comment when no data avaiable	    #
@@ -76,7 +76,19 @@ def wind_direction():
     if(json_wind_direction_idx == 0):
         return('...')
     else:
-        return('...')
+        try:
+            response = urllib.urlopen(url+json_wind_speed_idx)
+            data = json.loads(response.read())
+            wind_dir = int(data["result"][0]["Direction"])
+            if(wind_dir < 10):
+                wind_str = '00' + str(wind_dir)
+            elif(wind_dir > 9 and wind_dir < 100):
+                wind_str = '0' + str(wind_dir)
+            else:
+                wind_str = str(wind_dir)
+            return str(wind_str)
+        except:
+            return('...')
 
 # wind speed currently not supported
 def wind_speed():
