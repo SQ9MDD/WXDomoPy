@@ -30,10 +30,19 @@
 # temp z sieci APRSjest w fahrenheit przeliczanie na C =(F-32)/9*5
 # temp w celsjusz do sieci APRS trzeba wyslac jako fahrenheit F = (C*9/5)+32
 #
+# WX possible icon:
+# /_    - weather station wx blue
+# /W    - national weather service
+# /w    - water weather station
+# \_    - weather station with digi green
+# \W    - national weather services 
+#
 ################################### CONFIGURATION ###############################################
 #                                                                                               #
 wx_lat      	        = '5215.01N'                     	# coordinates APRS format           #
 wx_lon      	        = '02055.58E'                    	# coordinates APRS format           #
+wx_icon_table           = '/'                               # / - primary \ - secondary         #
+wx_icon_symbol          = '_'    
 json_ip                 = '10.9.48.3'                       # domoticz IP adress                #
 # required                                                                                      #
 json_wind_direction_idx = '0'                               # wind direction sensor IDX         #
@@ -71,7 +80,7 @@ storm_warning = False
 
 ################################### FUNCTION ARE HERE ###########################################
 
-# wind direction currently not supported
+# wind direction 
 def wind_direction():
     if(json_wind_direction_idx == 0):
         return('...')
@@ -90,7 +99,7 @@ def wind_direction():
         except:
             return('...')
 
-# wind speed currently not supported
+# wind speed 
 def wind_speed():
     if(json_wind_speed_idx == 0):
         return('...')
@@ -110,7 +119,7 @@ def wind_speed():
         except:
             return('...')
 
-# wind gust currently not supported
+# wind gust
 def wind_gust():
     if(json_wind_speed_idx == 0):
         return('g...')
@@ -292,10 +301,10 @@ def wx_data():
     outside_temp_label = outside_temp()
     # no data send status
     if(data_elements_count == 0 and not data_elements_first):
-        return('!' + wx_lat + '/' + wx_lon + '_ ' + wx_err_comment)
+        return('!' + wx_lat + wx_icon_table + wx_lon +  wx_icon_symbol + ' ' + wx_err_comment)
     # we have some data
     else:
-        return('!' + str(wx_lat) + '/' + str(wx_lon) + '_' + str(wind_direction()) + '/' + str(wind_speed()) + str(wind_gust()) + str(outside_temp()) + str(rain_1h()) + str(rain_24h()) + str(rain_midnight()) + str(humi()) + str(baro()) + str(voltage_in_frame()) + 'oDtz' + ' ' + str(voltage()) + str(inside_temp()) +  str(gen_dust()) + storm_data() + str(wx_comment))
+        return('!' + str(wx_lat) + wx_icon_table + str(wx_lon) + wx_icon_symbol + str(wind_direction()) + '/' + str(wind_speed()) + str(wind_gust()) + str(outside_temp()) + str(rain_1h()) + str(rain_24h()) + str(rain_midnight()) + str(humi()) + str(baro()) + str(voltage_in_frame()) + 'oDtz' + ' ' + str(voltage()) + str(inside_temp()) +  str(gen_dust()) + storm_data() + str(wx_comment))
 
 ########################################### MAIN ################################################
 
