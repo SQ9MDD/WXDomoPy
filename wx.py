@@ -42,10 +42,12 @@
 wx_lat      	        = '5215.01N'                     	# coordinates APRS format           #
 wx_lon      	        = '02055.58E'                    	# coordinates APRS format           #
 wx_icon_table           = '/'                               # / - primary \ - secondary         #
-wx_icon_symbol          = '_'    
+wx_icon_symbol          = '_'                                                                   #
+wx_comment  	        = 'WXDomoPy'      	                # beacon comment		            #
+wx_err_comment 	        = 'No WX data'				        # comment when no data avaiable	    #
 json_ip                 = '10.9.48.3'                       # domoticz IP adress                #
 # required                                                                                      #
-json_wind_direction_idx = '0'                               # wind direction sensor IDX         #
+json_wind_direction_idx = '61'                              # wind direction sensor IDX         #
 json_wind_speed_idx     = '61'                              # wind speed sensor IDX             #
 json_wind_gust_idx      = '61'                              # wind speed gust IDX               #
 json_temp_idx           = '5'                               # Temp sensor IDX                   #
@@ -63,11 +65,9 @@ json_general_pm_idx     = '58'                              # General PM sensor 
 json_voltage_batt_idx   = '0'                               # Battery voltage in comment        #
 json_voltage_batti_idx  = '7'                               # Battery voltage in frame          #
 # extra addons                                                                                  #
-json_thunder_dist_idx    = '0' #67                             # lightning detector distance       #
-json_thunder_enrg_idx    = '0' #68                            # lightning detector energy         #
+json_thunder_dist_idx    = '67'                             # lightning detector distance       #
+json_thunder_enrg_idx    = '68'                             # lightning detector energy         #
 # comments                                                                                      #
-wx_comment  	        = 'WXDomoPy'      	                # beacon comment		            #
-wx_err_comment 	        = 'No WX data'				        # comment when no data avaiable	    #
 #										      	                                                #
 ######################## DO NOTE EDIT BELLOW THIS LINE ##########################################
 
@@ -82,11 +82,11 @@ storm_warning = False
 
 # wind direction 
 def wind_direction():
-    if(json_wind_direction_idx == 0):
+    if(int(json_wind_direction_idx) == 0):
         return('...')
     else:
         try:
-            response = urllib.urlopen(url+json_wind_speed_idx)
+            response = urllib.urlopen(url+json_wind_direction_idx)
             data = json.loads(response.read())
             wind_dir = int(data["result"][0]["Direction"])
             if(wind_dir < 10):
@@ -101,7 +101,7 @@ def wind_direction():
 
 # wind speed 
 def wind_speed():
-    if(json_wind_speed_idx == 0):
+    if(int(json_wind_speed_idx) == 0):
         return('...')
     else:
         try:
@@ -121,7 +121,7 @@ def wind_speed():
 
 # wind gust
 def wind_gust():
-    if(json_wind_speed_idx == 0):
+    if(int(json_wind_speed_idx) == 0):
         return('g...')
     else:
         try:
@@ -142,7 +142,7 @@ def wind_gust():
 # outside temperature is a minimum information to generate WX APRS DATA
 def outside_temp():
     global data_elements_count,data_elements_first
-    if(json_temp_idx == 0):
+    if(int(json_temp_idx) == 0):
         return('')
     else:
         try:
@@ -183,7 +183,7 @@ def rain_midnight():
 # relative humidity
 def humi():
     global data_elements_count
-    if(json_humi_idx == 0):
+    if(int(json_humi_idx) == 0):
         return('')
     else:
         try:
@@ -200,7 +200,7 @@ def humi():
 # baromether
 def baro():
     global data_elements_count
-    if(json_baro_idx == 0):
+    if(int(json_baro_idx) == 0):
         return('')
     else:
         try:
@@ -219,7 +219,7 @@ def baro():
 # raspberry inside temperature
 def inside_temp():
     global data_elements_count,data_elements_first
-    if(json_tempi_idx == 0):
+    if(int(json_tempi_idx) == 0):
         return('')
     else:
         try:
@@ -235,7 +235,7 @@ def inside_temp():
 # battery voltage
 def voltage():
     global data_elements_count
-    if(json_voltage_batt_idx == 0):
+    if(int(json_voltage_batt_idx) == 0):
         return('')
     else:
         try:
@@ -248,7 +248,7 @@ def voltage():
             
 def voltage_in_frame():
     global data_elements_count
-    if(json_voltage_batt_idx == 0):
+    if(int(json_voltage_batti_idx) == 0):
         return('')
     else:
         try:
@@ -261,7 +261,7 @@ def voltage_in_frame():
 
 # read general pm sensor            
 def gen_dust():
-    if(json_general_pm_idx == 0):
+    if(int(json_general_pm_idx) == 0):
         return('')
     else:
         try:
@@ -273,7 +273,7 @@ def gen_dust():
             return('')
 # read lightning detector data            
 def storm_data():
-    if(json_thunder_dist_idx == 0 or json_thunder_enrg_idx == 0):
+    if(int(json_thunder_dist_idx) == 0 or int(json_thunder_enrg_idx) == 0):
         storm_warning = False
         return('')
     else:
