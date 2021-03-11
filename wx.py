@@ -13,16 +13,16 @@
 #   /               - required      symbol table
 #   02055.58E       - required      longtitude
 #   _               - required      icon (must be WX)
-#   ...             - required      wind direction (from 0-360) if no data set: "..."         
+#   ...             - required      wind direction (from 0-360) if no data set: "..."
 #   /               - required      separator
-#   ...             - required      wind speed (average last 1 minute) if no data set: "..."          
-#   g...            - required      wind gust (max from last 5 mins) if no data set: "g..." 
-#   t030            - required      temperature in fahrenheit    
+#   ...             - required      wind speed (average last 1 minute) if no data set: "..."
+#   g...            - required      wind gust (max from last 5 mins) if no data set: "g..."
+#   t030            - required      temperature in fahrenheit
 #   r000            - option        rain xxx
 #   p000            - option        rain xxx
-#   P000            - option        rain xxx  
-#   h00             - option        relative humidity (00 means 100%Rh)     
-#   b10218          - option        atmosferic pressure in hPa multiple 10  
+#   P000            - option        rain xxx
+#   h00             - option        relative humidity (00 means 100%Rh)
+#   b10218          - option        atmosferic pressure in hPa multiple 10
 #   Fxxxx           - option        water level above or below flood stage see: http://aprs.org/aprs12/weather-new.txt
 #   V138            - option        battery volts in tenths   128 would mean 12.8 volts
 #   Xxxx            - option        radiation lvl
@@ -35,7 +35,7 @@
 # /W    - national weather service
 # /w    - water weather station
 # \_    - weather station with digi green
-# \W    - national weather services 
+# \W    - national weather services
 #
 ################################### CONFIGURATION ###############################################
 #                                                                                               #
@@ -45,7 +45,6 @@ wx_icon_table           = '/'                               # / - primary \ - se
 wx_icon_symbol          = '_'                                                                   #
 wx_comment  	        = 'WXDomoPy'      	                # beacon comment		            #
 wx_err_comment 	        = 'No WX data'				        # comment when no data avaiable	    #
-#                                                                                               #
 json_ip                 = '10.9.48.3'                       # domoticz IP adress                #
 # required                                                                                      #
 json_wind_direction_idx = '61'                              # wind direction sensor IDX         #
@@ -60,14 +59,15 @@ json_humi_idx           = '5'                               # Humidity sensor ID
 json_baro_idx           = '5'                               # Baromether  IDX                   #
 # additional                                                                                    #
 json_tempi_idx          = '0'                               # inside temperature                #
-json_pm_25_idx          = '0'                               # PM 2.5 sensor IDX                 #
-json_pm_10_idx          = '0'                               # PM 10 sensor IDX                  #
-json_general_pm_idx     = '58'                              # General PM sensor                 #
+json_pm_1_idx           = '139'                             # PM 1.0 sensor IDX
+json_pm_25_idx          = '140'                             # PM 2.5 sensor IDX                 #
+json_pm_10_idx          = '141'                             # PM 10 sensor IDX                  #
+json_general_pm_idx     = '0'                               # General PM sensor                 #
 json_voltage_batt_idx   = '0'                               # Battery voltage in comment        #
-json_voltage_batti_idx  = '7'                               # Battery voltage in frame          #
+json_voltage_batti_idx  = '98'                              # Battery voltage in frame          #
 # extra addons                                                                                  #
-json_thunder_dist_idx   = '67'                             # lightning detector distance       #
-json_thunder_enrg_idx   = '68'                             # lightning detector energy         #
+json_thunder_dist_idx    = '0'                              # lightning detector distance       #
+json_thunder_enrg_idx    = '0'                              # lightning detector energy         #
 # comments                                                                                      #
 #										      	                                                #
 ######################## DO NOTE EDIT BELLOW THIS LINE ##########################################
@@ -77,6 +77,7 @@ import urllib, json
 url = 'http://' + json_ip + '/json.htm?type=devices&rid='
 data_elements_first = False
 data_elements_count = 0
+storm_warning = False
 
 ################################### FUNCTION ARE HERE ###########################################
 
@@ -245,7 +246,7 @@ def voltage():
             return('Bat: ' + str(voltage) + 'V ')
         except:
             return('')
-            
+
 def voltage_in_frame():
     global data_elements_count
     if(int(json_voltage_batti_idx) == 0):
@@ -257,9 +258,9 @@ def voltage_in_frame():
             voltage = int(round(data["result"][0]["Voltage"],1)*10)
             return('V' + str(voltage))
         except:
-            return('')            
+            return('')
 
-# read general pm sensor            
+# read general pm sensor
 def gen_dust():
     if(int(json_general_pm_idx) == 0):
         return('')
@@ -271,9 +272,50 @@ def gen_dust():
             return('Dust: ' + str(dust) + ' ')
         except:
             return('')
-# read lightning detector data            
+
+# read pm1 sensor
+def gen_pm_1_dust():
+    if(int(json_pm_1_idx) == 0):
+        return('')
+    else:
+        try:
+            response = urllib.urlopen(url+json_pm_1_idx)
+            data = json.loads(response.read())
+            dust = data["result"][0]["Data"]
+            return('PM1: ' + str(dust) + ' ')
+        except:
+            return('')
+
+# read pm25 sensor
+def gen_pm_25_dust():
+    if(int(json_pm_25_idx) == 0):
+        return('')
+    else:
+        try:
+            response = urllib.urlopen(url+json_pm_25_idx)
+            data = json.loads(response.read())
+            dust = data["result"][0]["Data"]
+            return('PM2.5: ' + str(dust) + ' ')
+        except:
+            return('')
+
+# read pm10 sensor
+def gen_pm_10_dust():
+    if(int(json_pm_10_idx) == 0):
+        return('')
+    else:
+        try:
+            response = urllib.urlopen(url+json_pm_10_idx)
+            data = json.loads(response.read())
+            dust = data["result"][0]["Data"]
+            return('PM10: ' + str(dust) + ' ')
+        except:
+            return('')
+
+# read lightning detector data
 def storm_data():
     if(int(json_thunder_dist_idx) == 0 or int(json_thunder_enrg_idx) == 0):
+        storm_warning = False
         return('')
     else:
         try:
@@ -283,12 +325,16 @@ def storm_data():
             if(strike_distance == 0):
                 return('')
             elif(strike_distance > 0 and strike_distance < 10):
-                return('STORM OVERHEAD!!! ')                
+                storm_warning = True
+                return('STORM OVERHEAD!!! ')
             elif(strike_distance > 10 and strike_distance < 20):
+                storm_warning = True
                 return('STORM COMING ')
             elif(strike_distance > 20):
+                storm_warning = True
                 return('STORM DETECTED ')
         except:
+            storm_warning = False
             return('')
 
 # make WX data
@@ -299,7 +345,7 @@ def wx_data():
         return('!' + wx_lat + wx_icon_table + wx_lon +  wx_icon_symbol + ' ' + wx_err_comment)
     # we have some data
     else:
-        return('!' + str(wx_lat) + wx_icon_table + str(wx_lon) + wx_icon_symbol + str(wind_direction()) + '/' + str(wind_speed()) + str(wind_gust()) + str(outside_temp()) + str(rain_1h()) + str(rain_24h()) + str(rain_midnight()) + str(humi()) + str(baro()) + str(voltage_in_frame()) + 'oDtz' + ' ' + str(voltage()) + str(inside_temp()) +  str(gen_dust()) + storm_data() + str(wx_comment))
+        return('!' + str(wx_lat) + wx_icon_table + str(wx_lon) + wx_icon_symbol + str(wind_direction()) + '/' + str(wind_speed()) + str(wind_gust()) + str(outside_temp()) + str(rain_1h()) + str(rain_24h()) + str(rain_midnight()) + str(humi()) + str(baro()) + str(voltage_in_frame()) + 'oDtz' + ' ' + str(voltage()) + str(inside_temp()) +  str(gen_dust()) + str(gen_pm_1_dust()) + str(gen_pm_25_dust()) + str(gen_pm_10_dust())  + storm_data() + str(wx_comment))
 
 ########################################### MAIN ################################################
 
