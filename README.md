@@ -7,7 +7,7 @@ The script downloads data from domoticz and prepares a complete weather frame, c
 Configuration comes down to filling in the IP address of the domoticz from which data will be collected, and the IDX of individual sensors.
 
 ## weather frame with position without time structure
- ramka pogodowa z pozycja bez czasu
+```
 
    !               - required      identifier
    5215.01N        - required      latitude
@@ -37,3 +37,4 @@ Configuration comes down to filling in the IP address of the domoticz from which
  /w    - water weather station
  \_    - weather station with digi green
  \W    - national weather services
+```
