@@ -70,7 +70,7 @@ json_thunder_dist_idx    = '0'                              # lightning detector
 json_thunder_enrg_idx    = '0'                              # lightning detector energy         #
 # comments                                                                                      #
 #										      	                                                #
-######################## DO NOTE EDIT BELLOW THIS LINE ##########################################
+######################## DO NOT EDIT BELLOW THIS LINE ##########################################
 
 import json
 import urllib, json
@@ -350,7 +350,7 @@ def wx_data():
 ########################################### MAIN ################################################
 
 # lets's go
-print wx_data()
+print(wx_data())
 
 # END of This Shit
 # Thanks to COVID-19
