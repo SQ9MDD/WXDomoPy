@@ -1,14 +1,12 @@
 # WXDomoPy
-
 The script downloads data from domoticz and prepares a complete weather frame, compliant with the APRS standard
 
 ## Configuration
-
 Configuration comes down to filling in the IP address of the domoticz from which data will be collected, and the IDX of individual sensors.
 
-## weather frame with position without time structure
-```
+## weather frame structure with position without time
 
+```
    !               - required      identifier
    5215.01N        - required      latitude
    /               - required      symbol table
@@ -38,3 +36,4 @@ Configuration comes down to filling in the IP address of the domoticz from which
  \_    - weather station with digi green
  \W    - national weather services
 ```
+
