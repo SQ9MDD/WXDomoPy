@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 # DOMOTICZ to APRX PYTHON script
@@ -90,7 +90,7 @@ def get_sfi():
         return('')
     else:
         try:
-            response = urllib.urlopen(url+json_solar_flux_idx)
+            response = urllib.request.urlopen(url+json_solar_flux_idx)
             data = json.loads(response.read())
             sfi = data["result"][0]["Data"]
             sfi = sfi.replace(" SFI","")
@@ -104,7 +104,7 @@ def wind_direction():
         return('...')
     else:
         try:
-            response = urllib.urlopen(url+json_wind_direction_idx)
+            response = urllib.request.urlopen(url+json_wind_direction_idx)
             data = json.loads(response.read())
             wind_dir = int(data["result"][0]["Direction"])
             if(wind_dir < 10):
@@ -123,7 +123,7 @@ def wind_speed():
         return('...')
     else:
         try:
-            response = urllib.urlopen(url+json_wind_speed_idx)
+            response = urllib.request.urlopen(url+json_wind_speed_idx)
             data = json.loads(response.read())
             wind_mph = data["result"][0]["Speed"]
             wind_mph = float(wind_mph) * 3600.0 / 1609.0
@@ -143,7 +143,7 @@ def wind_gust():
         return('g...')
     else:
         try:
-            response = urllib.urlopen(url+json_wind_gust_idx)
+            response = urllib.request.urlopen(url+json_wind_gust_idx)
             data = json.loads(response.read())
             wind_mph = data["result"][0]["Gust"]
             wind_mph = float(wind_mph) * 3600.0 / 1609.0
@@ -163,19 +163,19 @@ def outside_temp():
     if(int(json_temp_idx) == 0):
         return('')
     else:
-        try:
-            response = urllib.urlopen(url+json_temp_idx)
-            data = json.loads(response.read())
-            data_elements_count = data_elements_count + 1
-            data_elements_first = True
-            temp_fahrenheit = int(round((data["result"][0]["Temp"]*9/5)+32))
-            if(temp_fahrenheit < 100):
-                zero = '0'
-            else:
-                zero = ''
-            return('t' + zero + str(temp_fahrenheit))
-        except:
-            return('')
+        #try:
+        response = urllib.request.urlopen(url+json_temp_idx)
+        data = json.loads(response.read())
+        data_elements_count = data_elements_count + 1
+        data_elements_first = True
+        temp_fahrenheit = int(round((data["result"][0]["Temp"]*9/5)+32))
+        if(temp_fahrenheit < 100):
+            zero = '0'
+        else:
+            zero = ''
+        return('t' + zero + str(temp_fahrenheit))
+        #except:
+        #    return('')
 
 # rain 1h period currently not supported
 def rain_1h():
@@ -205,7 +205,7 @@ def humi():
         return('')
     else:
         try:
-            response = urllib.urlopen(url+json_humi_idx)
+            response = urllib.request.urlopen(url+json_humi_idx)
             data = json.loads(response.read())
             data_elements_count = data_elements_count + 1
             humi = int(data["result"][0]["Humidity"])
@@ -222,7 +222,7 @@ def baro():
         return('')
     else:
         try:
-            response = urllib.urlopen(url+json_baro_idx)
+            response = urllib.request.urlopen(url+json_baro_idx)
             data = json.loads(response.read())
             data_elements_count = data_elements_count + 1
             baro = int(round(data["result"][0]["Barometer"]*10))
@@ -241,7 +241,7 @@ def inside_temp():
         return('')
     else:
         try:
-            response = urllib.urlopen(url+json_tempi_idx)
+            response = urllib.request.urlopen(url+json_tempi_idx)
             data = json.loads(response.read())
             data_elements_count = data_elements_count + 1
             data_elements_first = True
@@ -257,7 +257,7 @@ def voltage():
         return('')
     else:
         try:
-            response = urllib.urlopen(url+json_voltage_batt_idx)
+            response = urllib.request.urlopen(url+json_voltage_batt_idx)
             data = json.loads(response.read())
             voltage = float(round(data["result"][0]["Voltage"],1))
             return('Bat: ' + str(voltage) + 'V ')
@@ -270,7 +270,7 @@ def voltage_in_frame():
         return('')
     else:
         try:
-            response = urllib.urlopen(url+json_voltage_batti_idx)
+            response = urllib.request.urlopen(url+json_voltage_batti_idx)
             data = json.loads(response.read())
             voltage = int(round(data["result"][0]["Voltage"],1)*10)
             return('V' + str(voltage))
@@ -283,7 +283,7 @@ def gen_dust():
         return('')
     else:
         try:
-            response = urllib.urlopen(url+json_general_pm_idx)
+            response = urllib.request.urlopen(url+json_general_pm_idx)
             data = json.loads(response.read())
             dust = data["result"][0]["Data"]
             dust = dust.replace(" ","")
@@ -297,7 +297,7 @@ def gen_pm_1_dust():
         return('')
     else:
         try:
-            response = urllib.urlopen(url+json_pm_1_idx)
+            response = urllib.request.urlopen(url+json_pm_1_idx)
             data = json.loads(response.read())
             dust = data["result"][0]["Data"]
             dust = dust.replace(" ","")
@@ -311,7 +311,7 @@ def gen_pm_25_dust():
         return('')
     else:
         try:
-            response = urllib.urlopen(url+json_pm_25_idx)
+            response = urllib.request.urlopen(url+json_pm_25_idx)
             data = json.loads(response.read())
             dust = data["result"][0]["Data"]
             dust = dust.replace(" ","")
@@ -325,7 +325,7 @@ def gen_pm_10_dust():
         return('')
     else:
         try:
-            response = urllib.urlopen(url+json_pm_10_idx)
+            response = urllib.request.urlopen(url+json_pm_10_idx)
             data = json.loads(response.read())
             dust = data["result"][0]["Data"]
             dust = dust.replace(" ","")
@@ -340,7 +340,7 @@ def storm_data():
         return('')
     else:
         try:
-            response = urllib.urlopen(url+json_thunder_dist_idx)
+            response = urllib.request.urlopen(url+json_thunder_dist_idx)
             data = json.loads(response.read())
             strike_distance = int(data["result"][0]["Data"].replace(" km",""))
             if(strike_distance == 0):
@@ -371,7 +371,7 @@ def wx_data():
 ########################################### MAIN ################################################
 
 # lets's go
-print wx_data()
+print(wx_data())
 
 # END of This Shit
 # Thanks to COVID-19
